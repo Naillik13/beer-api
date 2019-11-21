@@ -10,6 +10,7 @@ exports.isAuthenticated = (req, res, next) => {
         // Here we validate that the JSON Web Token is valid and has been
         // created using the same private pass phrase
         jwt.verify(token, privateKey, { algorithm: "HS256" }, (err, user) => {
+            console.log(user.id)
 
             // if there has been an error...
             if (err) {

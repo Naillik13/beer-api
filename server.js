@@ -3,7 +3,6 @@ const bodyParser = require('body-parser');
 
 // create express app
 const app = express();
-
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }))
 
@@ -26,19 +25,8 @@ mongoose.connect(dbConfig.url, {
     process.exit();
 });
 
-// define a simple route
-app.get('/', (req, res) => {
-    res.json({"message": "Welcome to BeerApi"});
-});
-
-// let's first add a /secret api endpoint that we will be protecting
-app.get('/secret', (req, res) => {
-    res.json({ "message" : "THIS IS SUPER SECRET, DO NOT SHARE!" })
-})
-
-require('./app/routes/authentication.routes.js')(app);
-require('./app/routes/beer.routes.js')(app);
-require('./app/routes/place.routes.js')(app);
+const api = require("./app/routes/api")
+app.use('/api', api)
 
 // listen for requests
 app.listen(3000, () => {

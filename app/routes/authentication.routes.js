@@ -4,7 +4,7 @@ module.exports = (app) => {
 
     app.get('/jwt', (req, res) => {
         let privateKey = fs.readFileSync('././private.pem', 'utf8');
-        let token = jwt.sign({"body": "stuff"}, privateKey, {algorithm: 'HS256'});
+        let token = jwt.sign({"id": "userid"}, privateKey, {algorithm: 'HS256'});
         res.send(token);
     })
 }
