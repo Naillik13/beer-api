@@ -28,9 +28,15 @@ mongoose.connect(dbConfig.url, {
 
 // define a simple route
 app.get('/', (req, res) => {
-    res.json({"message": "Welcome to EasyNotes application. Take notes quickly. Organize and keep track of all your notes."});
+    res.json({"message": "Welcome to BeerApi"});
 });
 
+// let's first add a /secret api endpoint that we will be protecting
+app.get('/secret', (req, res) => {
+    res.json({ "message" : "THIS IS SUPER SECRET, DO NOT SHARE!" })
+})
+
+require('./app/routes/authentication.routes.js')(app);
 require('./app/routes/beer.routes.js')(app);
 require('./app/routes/place.routes.js')(app);
 

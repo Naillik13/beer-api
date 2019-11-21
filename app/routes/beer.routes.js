@@ -1,8 +1,9 @@
 module.exports = (app) => {
     const beers = require('../controllers/beer.controller.js');
+    const authentication = require('../controllers/authentication.controller')
 
     // Create a new Note
-    app.post('/beers', beers.create);
+    app.post('/beers', authentication.isAuthenticated, beers.create);
 
     // Retrieve all Notes
     app.get('/beers', beers.findAll);
