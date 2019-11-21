@@ -28,7 +28,7 @@ exports.create = (req, res) => {
     // Save Place in the database
     place.save()
         .then(data => {
-            res.send(data.populate({path: "draftBeers", select: "name abv imgUrl"}));
+            res.status(201).send(data);
         }).catch(err => {
         res.status(500).send({
             message: err.message || "Some error occurred while creating the Place."

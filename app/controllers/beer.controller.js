@@ -24,7 +24,7 @@ exports.create = (req, res) => {
     // Save Beer in the database
     beer.save()
         .then(data => {
-            res.send(data);
+            res.status(201).send(data);
         }).catch(err => {
         res.status(500).send({
             message: err.message || "Some error occurred while creating the Beer."
@@ -39,7 +39,7 @@ exports.findAll = (req, res) => {
         const query = {name: nameRegex};
         Beer.find(query)
             .then(beers => {
-                res.send(beers);
+                res.status(200).send(beers);
             }).catch(err => {
             res.status(500).send({
                 message: err.message || "Some error occurred while retrieving beers."
@@ -76,7 +76,7 @@ exports.findOne = (req, res) => {
                     message: "Beer not found with id " + req.params.beerId
                 });
             }
-            res.send(beer);
+            res.status(200).send(beer);
         }).catch(err => {
         if(err.kind === 'ObjectId') {
             return res.status(404).send({
@@ -115,7 +115,7 @@ exports.update = (req, res) => {
                     message: "Beer not found with id " + req.params.beerId
                 });
             }
-            res.send(beer);
+            res.status(200).send(beer);
         }).catch(err => {
         if(err.kind === 'ObjectId') {
             return res.status(404).send({
@@ -137,7 +137,7 @@ exports.delete = (req, res) => {
                     message: "Beer not found with id " + req.params.beerId
                 });
             }
-            res.send({message: "Beer deleted successfully!"});
+            res.status(200).send({message: "Beer deleted successfully!"});
         }).catch(err => {
         if(err.kind === 'ObjectId' || err.name === 'NotFound') {
             return res.status(404).send({
