@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const BeerSchema = mongoose.Schema({
-    name: {type: String, unique: true},
+    name: {type: String, unique: true, required:true},
     abv: Number,
     country: String,
     color: String,

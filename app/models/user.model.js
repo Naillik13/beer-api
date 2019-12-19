@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
 const UserSchema = mongoose.Schema({
-    email: {type: String, unique: true},
-    password: {type: String},
-    admin: {type: Boolean}
+    email: {type: String, unique: true, required:true},
+    password: {type: String, required:true},
+    admin: {type: Boolean, required:true}
 }, {
     timestamps: true
 });

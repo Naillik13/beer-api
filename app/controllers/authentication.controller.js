@@ -3,27 +3,73 @@ const fs = require('fs');
 const User = require('../models/user.model.js');
 const bcrypt = require('bcrypt');
 
+const privateKey = fs.readFileSync('././private.pem', 'utf8');
+
 exports.isAuthenticated = (req, res, next) => {
     if (typeof req.headers.authorization !== "undefined") {
-
         let token = req.headers.authorization.split(" ")[1];
-        let privateKey = fs.readFileSync('././private.pem', 'utf8');
 
         jwt.verify(token, privateKey, { algorithm: "HS256" }, (err, user) => {
-            console.log(user.id);
-
             if (err) {
-                res.status(401).json({ error: "Not Authorized" });
-                throw new Error("Not Authorized");
+                res.status(401).json({
+                    message: "Invalid token"
+                });
             }
 
-            return next();
+            const query = {email: user.email};
+            User.findOne(query).then(user => {
+                if (!user) {
+                    res.status(401).json({
+                        message: "Invalid token"
+                    });
+                    return
+                }
+                return next();
+            }).catch(_ => {
+                res.status(500).json({
+                    message: "Some error occurred"
+                });
+            });
         });
     } else {
-        // No authorization header exists on the incoming
-        // request, return not authorized and throw a new error
-        res.status(500).json({ error: "Not Authorized" });
-        throw new Error("Not Authorized");
+        res.status(401).json({
+            message: "Unauthorized"
+        });
+    }
+};
+
+exports.isAdmin = (req, res, next) => {
+    if (typeof req.headers.authorization !== "undefined") {
+        let token = req.headers.authorization.split(" ")[1];
+
+        jwt.verify(token, privateKey, { algorithm: "HS256" }, (err, user) => {
+            if (err) {
+                res.status(401).json({
+                    message: "Invalid token"
+                });
+            }
+
+            const query = {email: user.email};
+            User.findOne(query).then(user => {
+                console.log(!user.admin);
+                if (!user || !user.admin) {
+                    res.status(401).json({
+                        message: "Unauthorized"
+                    });
+                    return
+                }
+                return next();
+            }).catch(_ => {
+                res.status(500).json({
+                    message: "Some error occurred"
+                });
+            });
+
+        });
+    } else {
+        res.status(401).json({
+            message: "Unauthorized"
+        });
     }
 };
 
@@ -39,16 +85,14 @@ exports.signIn = (req, res) => {
     }
 
     const query = {email: req.body.email};
-    console.log(query);
     User.findOne(query).then(user => {
-        console.log(user);
         bcrypt.compare(req.body.password, user.password).then((isValidCredentials) => {
             if (!isValidCredentials || !user) {
                 res.status(401).send({
                     message: "Invalid credentials"
                 });
             }
-            let privateKey = fs.readFileSync('././private.pem', 'utf8');
+
             let token = jwt.sign({"email": user.email}, privateKey, {algorithm: 'HS256'});
             res.send(token);
         }).catch((error) =>  {
