@@ -11,5 +11,6 @@ router.use(function timeLog(req, res, next) {
 require('./authentication.routes.js')(router);
 require('./beer.routes.js')(router);
 require('./place.routes.js')(router);
+require('./user.routes')(router);
 
-module.exports = router
+module.exports = router;
