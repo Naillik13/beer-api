@@ -17,7 +17,7 @@ exports.create = (req, res) => {
         return res.status(400).send({
             message: "Password confirmation can not be empty."
         });
-    } else if (req.body.password != req.body.passwordConfirmation) {
+    } else if (req.body.password !== req.body.passwordConfirmation) {
         return res.status(400).send({
             message: "Password confirmation can not be different from password."
         });
@@ -34,6 +34,11 @@ exports.create = (req, res) => {
         user.save().then(data => {
             res.status(201).send(data);
         }).catch(err => {
+            if (err.code === 11000) {
+                res.status(400).send({
+                    message: "This email is already taken"
+                });
+            }
             res.status(500).send({
                 message: err.message || "Some error occurred while creating the User."
             });
@@ -45,17 +50,27 @@ exports.create = (req, res) => {
     });
 };
 
+// Retrieve and return all places from the database.
+exports.findAll = (req, res) => {
+    User.find().then(places => {
+        res.send(places);
+    }).catch(err => {
+        res.status(500).send({
+            message: err.message || "Some error occurred while retrieving places."
+        });
+    });
+};
+
 // Find a single user with a userId
 exports.findOne = (req, res) => {
-    User.findById(req.params.userId)
-        .then(user => {
-            if(!user) {
-                return res.status(404).send({
-                    message: "User not found with id " + req.params.userId
-                });
-            }
-            res.status(200).send(user);
-        }).catch(err => {
+    User.findById(req.params.userId).then(user => {
+        if(!user) {
+            return res.status(404).send({
+                message: "User not found with id " + req.params.userId
+            });
+        }
+        res.status(200).send(user);
+    }).catch(err => {
         if(err.kind === 'ObjectId') {
             return res.status(404).send({
                 message: "User not found with id " + req.params.userId
