@@ -14,7 +14,7 @@ exports.create = (req, res) => {
         });
     }
 
-    // Create a Note
+    // Create a Place
     const place = new Place({
         name: req.body.name,
         address: req.body.address,

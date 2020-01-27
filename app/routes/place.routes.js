@@ -1,18 +1,18 @@
 module.exports = (router) => {
     const beers = require('../controllers/place.controller.js');
 
-    // Create a new Note
+    // Create a new Place
     router.post('/places', beers.create);
 
-    // Retrieve all Notes
+    // Retrieve all Places
     router.get('/places', beers.findAll);
 
-    // Retrieve a single Note with noteId
+    // Retrieve a single Place with placeId
     router.get('/places/:placeId', beers.findOne);
 
-    // Update a Note with noteId
+    // Update a Place with placeId
     router.put('/places/:placeId', beers.update);
 
-    // Delete a Note with noteId
+    // Delete a Place with placeId
     router.delete('/places/:placeId', beers.delete);
-}
+};

@@ -9,7 +9,7 @@ exports.create = (req, res) => {
         });
     }
 
-    // Create a Note
+    // Create a Beer
     const beer = new Beer({
         name: req.body.name,
         abv: req.body.abv,
@@ -35,7 +35,7 @@ exports.create = (req, res) => {
 // Retrieve and return all beers from the database.
 exports.findAll = (req, res) => {
     if (req.query.name) {
-        const nameRegex = new RegExp(req.query.name, "i")
+        const nameRegex = new RegExp(req.query.name, "i");
         const query = {name: nameRegex};
         Beer.find(query)
             .then(beers => {
