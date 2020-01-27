@@ -2,7 +2,7 @@ const User = require('../models/user.model.js');
 
 exports.isAdminWithEmail = async (email) => {
     const query = {email: email};
-    await User.findOne(query).then(user => {
+    return await User.findOne(query).then(user => {
         console.log(!user.admin);
         return !(!user || !user.admin);
     }).catch(e => {
