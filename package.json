@@ -4,6 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
+    "preinstall": "openssl genrsa -out private.pem 2048",
     "start": "node server.js"
   },
   "author": "naillik",
