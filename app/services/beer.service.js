@@ -6,4 +6,4 @@ exports.getAll = () => {
         .then(beers => {
             return beers
     });
-}
+};

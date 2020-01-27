@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const User = require('../models/user.model.js');
+const UserService = require('../services/user.service');
 const bcrypt = require('bcrypt');
 
 const privateKey = fs.readFileSync('././private.pem', 'utf8');
@@ -49,22 +50,13 @@ exports.isAdmin = (req, res, next) => {
                 });
             }
 
-            const query = {email: user.email};
-            User.findOne(query).then(user => {
-                console.log(!user.admin);
-                if (!user || !user.admin) {
-                    res.status(401).json({
-                        message: "Unauthorized"
-                    });
-                    return
-                }
+            if (UserService.isAdminWithEmail(user.email)) {
                 return next();
-            }).catch(_ => {
-                res.status(500).json({
-                    message: "Some error occurred"
+            } else {
+                res.status(401).json({
+                    message: "Unauthorized"
                 });
-            });
-
+            }
         });
     } else {
         res.status(401).json({

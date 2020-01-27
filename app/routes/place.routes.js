@@ -1,8 +1,9 @@
 module.exports = (router) => {
     const beers = require('../controllers/place.controller.js');
+    const authentication = require('../controllers/authentication.controller');
 
     // Create a new Place
-    router.post('/places', beers.create);
+    router.post('/places', authentication.isAdmin, beers.create);
 
     // Retrieve all Places
     router.get('/places', beers.findAll);
@@ -11,8 +12,8 @@ module.exports = (router) => {
     router.get('/places/:placeId', beers.findOne);
 
     // Update a Place with placeId
-    router.put('/places/:placeId', beers.update);
+    router.put('/places/:placeId', authentication.isAdmin, beers.update);
 
     // Delete a Place with placeId
-    router.delete('/places/:placeId', beers.delete);
+    router.delete('/places/:placeId', authentication.isAdmin, beers.delete);
 };
