@@ -50,13 +50,51 @@ exports.isAdmin = (req, res, next) => {
                 });
             }
 
-            if (UserService.isAdminWithEmail(user.email)) {
-                return next();
-            } else {
+            UserService.isAdminWithEmail(user.email).then(isAuthorized => {
+                if (isAuthorized) {
+                    return next();
+                } else {
+                    res.status(401).json({
+                        message: "Unauthorized"
+                    });
+                }
+            }).catch(_ => {
+                res.status(500).send({
+                    message: "Some error occurred"
+                });
+            })
+        });
+    } else {
+        res.status(401).json({
+            message: "Unauthorized"
+        });
+    }
+};
+
+exports.isAuthorizedToDeleteUser = (req, res, next) => {
+    if (typeof req.headers.authorization !== "undefined") {
+        let token = req.headers.authorization.split(" ")[1];
+
+        jwt.verify(token, privateKey, { algorithm: "HS256" }, (err, user) => {
+            if (err) {
                 res.status(401).json({
-                    message: "Unauthorized"
+                    message: "Invalid token"
                 });
             }
+
+            UserService.isAdminOrSameUser(user.email, req.params.userId).then(isAuthorized => {
+                if (isAuthorized) {
+                    return next();
+                } else {
+                    res.status(401).json({
+                        message: "Unauthorized"
+                    });
+                }
+            }).catch(_ => {
+                res.status(500).send({
+                    message: "Some error occurred"
+                });
+            })
         });
     } else {
         res.status(401).json({

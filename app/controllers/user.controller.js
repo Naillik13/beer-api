@@ -1,7 +1,6 @@
 const User = require('../models/user.model.js');
 const bcrypt = require('bcrypt');
 
-
 // Create and Save a new User
 exports.create = (req, res) => {
     // Validate request

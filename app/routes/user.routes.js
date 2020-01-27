@@ -11,5 +11,5 @@ module.exports = (router) => {
     router.get('/users/:userId', users.findOne);
 
     // Delete a User with userId
-    router.delete('/users/:userId', authentication.isAdmin, users.delete);
+    router.delete('/users/:userId', authentication.isAuthorizedToDeleteUser, users.delete);
 };
