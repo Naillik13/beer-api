@@ -18,7 +18,10 @@ mongoose.Promise = global.Promise;
 
 // Connecting to the database
 mongoose.connect(dbConfig.url, {
-    useNewUrlParser: true
+    useNewUrlParser: true,
+    reconnectTries: Number.MAX_VALUE,
+    reconnectInterval: 500,
+    connectTimeoutMS: 10000,
 }).then(() => {
     console.log("Successfully connected to the database");
 }).catch(err => {
